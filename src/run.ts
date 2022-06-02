@@ -1,8 +1,7 @@
 import {AlchemyProvider} from '@ethersproject/providers';
 import axios from 'axios/index';
 import {Wallet} from '@ethersproject/wallet';
-import {ERC721TokenType, ETHTokenType, ImmutableXClient} from "@imtbl/imx-sdk";
-import {ImmutableMethodParams} from "@imtbl/imx-sdk/dist/src/types";
+import {ERC721TokenType, ETHTokenType, ImmutableMethodParams, ImmutableXClient} from "@imtbl/imx-sdk";
 import {BigNumber} from "@ethersproject/bignumber";
 
 const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8rT');
@@ -20,64 +19,81 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
         signer: signer,
     });
 
-    process.exit(0)
+    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_type=ETH&order_by=buy_quantity&direction=asc&page_size=2'
 
-    /*
-    const data = {
-        "user": publicKey,
-        "token_sell": {
-            "type": "ETH",
-            "data": {
-                "decimals": 18
-            }
-        },
-        "amount_sell": price.toString(),
-        "token_buy": {
-            "type": "ERC721",
-            "data": {
-                "token_id": tokenId,
-                "token_address": '0x9e0d99b864e1ac12565125c5a82b59adea5a09cd'
-            }
-        },
-        "amount_buy": "1",
-        "include_fees": true
-    }
-
-    await axios.post('https://api.x.immutable.com/v1/signable-order-details', data)
+    await axios.get(endpoint)
         .then(response => {
-            /*
-            const payload: ImmutableMethodParams.ImmutableGetSignableTradeParamsTS = {
-                user: publicKey,
-                amountBuy: BigNumber.from('1'),
-                amountSell: BigNumber.from(price.toString()),
-                include_fees: true,
-                orderId: orderId,
-                expiration_timestamp: response.data.expiration_timestamp,
-                tokenBuy: {
-                    type: ERC721TokenType.ERC721,
-                    data: {
-                        tokenId: tokenId,
-                        tokenAddress: addressContract
-                    }
-                },
-                tokenSell: {
-                    type: ETHTokenType.ETH,
-                    data: {
-                        decimals: 18
-                    }
-                }
-            };
+            let result = response.data.result
 
-            user.createTrade(payload).then(result => {
-                console.log(JSON.stringify({result: 'OK', trade_id: result.trade_id}));
-                process.exit(0);
-            })
-        }).catch(error => {
-            console.log(JSON.stringify({result: 'KO', error: error.message}));
-            process.exit(1);
+            let floor = result[0]
+            let quantityFloor = floor.buy.data.quantity
+            let decimalsFloor = floor.buy.data.decimals
+            let priceFloor = quantityFloor / Math.pow(10, decimalsFloor)
+            let tokenId = floor.sell.data.token_id
+            let orderId = floor.order_id
+
+            let floorSecond = result[1]
+            let quantityFloorSecond = floorSecond.buy.data.quantity
+            let decimalsFloorSecond = floorSecond.buy.data.decimals
+            let priceFloorSecond = quantityFloorSecond / Math.pow(10, decimalsFloorSecond)
+            let halfPriceFloorSecond = priceFloorSecond / 2
+
+            if (priceFloor < halfPriceFloorSecond) {
+                const data = {
+                    "user": publicKey,
+                    "token_sell": {
+                        "type": "ETH",
+                        "data": {
+                            "decimals": 18
+                        }
+                    },
+                    "amount_sell": quantityFloor.toString(),
+                    "token_buy": {
+                        "type": "ERC721",
+                        "data": {
+                            "token_id": tokenId,
+                            "token_address": '0x9e0d99b864e1ac12565125c5a82b59adea5a09cd'
+                        }
+                    },
+                    "amount_buy": "1",
+                    "include_fees": true
+                }
+
+                axios.post('https://api.x.immutable.com/v1/signable-order-details', data)
+                    .then(response => {
+                        const payload: ImmutableMethodParams.ImmutableGetSignableTradeParamsTS = {
+                            user: publicKey,
+                            amountBuy: BigNumber.from('1'),
+                            amountSell: BigNumber.from(quantityFloor.toString()),
+                            include_fees: true,
+                            orderId: orderId,
+                            expiration_timestamp: response.data.expiration_timestamp,
+                            tokenBuy: {
+                                type: ERC721TokenType.ERC721,
+                                data: {
+                                    tokenId: tokenId,
+                                    tokenAddress: '0x9e0d99b864e1ac12565125c5a82b59adea5a09cd'
+                                }
+                            },
+                            tokenSell: {
+                                type: ETHTokenType.ETH,
+                                data: {
+                                    decimals: 18
+                                }
+                            }
+                        };
+                        user.createTrade(payload).then(result => {
+                            console.log(result);
+                        })
+                    }).catch(error => {
+                        console.log(error.message);
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error)
         });
-    */
+
 })().catch(e => {
-    console.log(JSON.stringify({result: 'KO', error: e}));
-    process.exit(1);
+    console.log(e);
 });
