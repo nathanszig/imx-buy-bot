@@ -39,6 +39,10 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
             let halfPriceFloorSecond = priceFloorSecond / 2
 
             if (priceFloor < halfPriceFloorSecond) {
+                console.log('------------------------')
+                console.log(new Date().toLocaleString() + ' --- Something to buy')
+                console.log('------------------------')
+
                 const data = {
                     "user": publicKey,
                     "token_sell": {
@@ -86,8 +90,10 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
                             console.log(result);
                         })
                     }).catch(error => {
-                        console.log(error.message);
+                    console.log(error.message);
                 });
+            } else {
+                console.log(new Date().toLocaleString() + ' --- Nothing to buy')
             }
         })
         .catch(error => {
