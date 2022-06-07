@@ -19,14 +19,14 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
         signer: signer,
     });
 
-    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_type=ETH&order_by=buy_quantity&direction=asc&page_size=2'
+    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&buy_token_address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&page_size=50'
 
     await axios.get(endpoint)
         .then(response => {
             let result = response.data.result
 
             if (result === []) {
-                console.log(new Date().toLocaleString() + 'Any result in ETH')
+                console.log(new Date().toLocaleString() + 'Any result in USDC')
 
                 process.exit(0)
             }
@@ -35,6 +35,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
             let quantityFloor = floor.buy.data.quantity
             let decimalsFloor = floor.buy.data.decimals
             let priceFloor = quantityFloor / Math.pow(10, decimalsFloor)
+
             let tokenId = floor.sell.data.token_id
             let orderId = floor.order_id
 
@@ -54,12 +55,12 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
                     "token_sell": {
                         "type": "ETH",
                         "data": {
-                            "decimals": 18
+                            "decimals": 6
                         }
                     },
                     "amount_sell": quantityFloor.toString(),
                     "token_buy": {
-                        "type": "ERC721",
+                        "type": "ERC20",
                         "data": {
                             "token_id": tokenId,
                             "token_address": '0x9e0d99b864e1ac12565125c5a82b59adea5a09cd'
@@ -99,7 +100,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
                     console.log(error.message);
                 });
             } else {
-                console.log(new Date().toLocaleString() + ' --- Nothing to buy in ETH')
+                console.log(new Date().toLocaleString() + ' --- Nothing to buy in USDC')
             }
         })
         .catch(error => {

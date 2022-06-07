@@ -19,14 +19,14 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
         signer: signer,
     });
 
-    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_type=ETH&order_by=buy_quantity&direction=asc&page_size=2'
+    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_address=0xccc8cb5229b0ac8069c51fd58367fd1e622afd97&order_by=buy_quantity&direction=asc&page_size=2'
 
     await axios.get(endpoint)
         .then(response => {
             let result = response.data.result
 
             if (result === []) {
-                console.log(new Date().toLocaleString() + 'Any result in ETH')
+                console.log(new Date().toLocaleString() + 'Any result in GODS')
 
                 process.exit(0)
             }
@@ -99,7 +99,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
                     console.log(error.message);
                 });
             } else {
-                console.log(new Date().toLocaleString() + ' --- Nothing to buy in ETH')
+                console.log(new Date().toLocaleString() + ' --- Nothing to buy in GODS')
             }
         })
         .catch(error => {

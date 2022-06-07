@@ -19,14 +19,14 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
         signer: signer,
     });
 
-    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_type=ETH&order_by=buy_quantity&direction=asc&page_size=2'
+    let endpoint = 'https://api.x.immutable.com/v1/orders?include_fees=true&status=active&sell_token_address=0x9e0d99b864e1ac12565125c5a82b59adea5a09cd&direction=asc&buy_token_address=0xf57e7e7c23978c3caec3c3548e3d615c346e79ff&order_by=buy_quantity&direction=asc&page_size=2'
 
     await axios.get(endpoint)
         .then(response => {
             let result = response.data.result
 
             if (result === []) {
-                console.log(new Date().toLocaleString() + 'Any result in ETH')
+                console.log(new Date().toLocaleString() + 'Any result in IMX')
 
                 process.exit(0)
             }
@@ -35,6 +35,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
             let quantityFloor = floor.buy.data.quantity
             let decimalsFloor = floor.buy.data.decimals
             let priceFloor = quantityFloor / Math.pow(10, decimalsFloor)
+
             let tokenId = floor.sell.data.token_id
             let orderId = floor.order_id
 
@@ -43,6 +44,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
             let decimalsFloorSecond = floorSecond.buy.data.decimals
             let priceFloorSecond = quantityFloorSecond / Math.pow(10, decimalsFloorSecond)
             let halfPriceFloorSecond = priceFloorSecond / 2
+
 
             if (priceFloor < halfPriceFloorSecond) {
                 console.log('------------------------')
@@ -99,7 +101,7 @@ const provider = new AlchemyProvider('mainnet', '0BZjuaH8NIoewLDSzZRTiRPav7IhD8r
                     console.log(error.message);
                 });
             } else {
-                console.log(new Date().toLocaleString() + ' --- Nothing to buy in ETH')
+                console.log(new Date().toLocaleString() + ' --- Nothing to buy in IMX')
             }
         })
         .catch(error => {
