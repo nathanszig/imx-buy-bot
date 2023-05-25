@@ -29,6 +29,6 @@ jobs:
         script: |
           cd /var/www/imx-buy-bot
           git pull git@github.com:nathanszig/imx-buy-bot.git
-          pm2 stop "buy-eth"
+          pm2 delete all
           pm2 start "yarn -s buy-eth >> /home/nathan/logs/buy-eth.log"
           echo "Deploy OK"
