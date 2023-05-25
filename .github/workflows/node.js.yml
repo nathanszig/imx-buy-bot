@@ -16,16 +16,20 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [12.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    steps :
+    - name : Deploy imx buy bot
+      uses : appleboy/ssh-action@v0.1.2
+      with :
+        host: ${{secrets.SSH_HOST}}
+        key: ${{secrets.SSH_KEY}}
+        username: ${{secrets.SSH_USERNAME}}
+        
+        script: |
+          cd /var/www/imx-buy-bot
+          git pull git@github.com:nathanszig/imx-buy-bot.git
+          pm2 reload "yarn -s buy-eth >> /home/nathan/logs/buy-eth.log"
+          pm2 reload "yarn -s buy-imx >> /home/nathan/logs/buy-imx.log"
+          pm2 reload "yarn -s buy-usdc >> /home/nathan/logs/buy-usdc.log"
+          echo "Deploy OK"
