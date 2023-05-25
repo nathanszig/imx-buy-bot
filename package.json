@@ -2,8 +2,7 @@
   "scripts": {
     "buy": "ts-node ./src/run.ts",
     "buy-imx": "ts-node ./src/runImx.ts",
-    "buy-usdc": "ts-node ./src/runUsdc.ts",
-    "buy-gods": "ts-node ./src/runGods.ts"
+    "buy-usdc": "ts-node ./src/runUsdc.ts"
   },
   "private": false,
   "engines": {
