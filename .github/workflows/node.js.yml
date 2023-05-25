@@ -30,5 +30,7 @@ jobs:
           cd /var/www/imx-buy-bot
           git pull git@github.com:nathanszig/imx-buy-bot.git
           pm2 delete all
-          pm2 start "yarn -s buy-eth >> /home/nathan/logs/buy-eth.log"
+          for coin in eth btc ltc; do
+            pm2 start "yarn -s buy-$coin >> /home/nathan/logs/buy-$coin.log"
+          done
           echo "Deploy OK"
