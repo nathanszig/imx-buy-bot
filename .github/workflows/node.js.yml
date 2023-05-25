@@ -30,6 +30,4 @@ jobs:
           cd /var/www/imx-buy-bot
           git pull git@github.com:nathanszig/imx-buy-bot.git
           pm2 reload "yarn -s buy-eth >> /home/nathan/logs/buy-eth.log"
-          pm2 reload "yarn -s buy-imx >> /home/nathan/logs/buy-imx.log"
-          pm2 reload "yarn -s buy-usdc >> /home/nathan/logs/buy-usdc.log"
           echo "Deploy OK"
