@@ -1,13 +1,13 @@
 # imx-buy-bot
 
-### Start
+### Start (example with eth)
 
 ```
-pm2 start "yarn -s buy >> ./buy.log"
+pm2 start "yarn -s buy-eth >> ./buy-eth.log"
 ```
 
 ### Stop
 
 ```
-pm2 stop "buy"
+pm2 stop "buy-eth"
 ```

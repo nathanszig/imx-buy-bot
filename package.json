@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "buy": "ts-node ./src/run.ts",
+    "buy-eth": "ts-node ./src/runEth.ts",
     "buy-imx": "ts-node ./src/runImx.ts",
     "buy-usdc": "ts-node ./src/runUsdc.ts"
   },
+  "licenses": "MIT",
   "private": false,
   "engines": {
     "npm": ">=6.x.x",
